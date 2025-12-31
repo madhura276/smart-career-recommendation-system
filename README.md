@@ -75,7 +75,7 @@ This project demonstrates **applied Data Science**, **Machine Learning reasoning
 git clone https://github.com/madhura276/smart-career-recommendation-system.git
 cd smart-career-recommendation-system
 
-**### 2️⃣ Backend Setup**
+### 2️⃣ Backend Setup
 cd backend
 npm install
 
@@ -92,7 +92,7 @@ node server.js
 **Backend runs on:**
 http://localhost:5000
 
-3️⃣ Frontend Setup
+### 3️⃣ Frontend Setup
 
 **Open a new terminal:**
 cd frontend
@@ -102,7 +102,7 @@ npm start
 **Frontend runs on:**
 http://localhost:3000
 
-4️⃣ Using the Application
+### 4️⃣ Using the Application
 
 Enter your skills (e.g., python, sql, excel)
 Click Get Recommendations
