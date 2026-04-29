@@ -1,123 +1,245 @@
-# Smart Career Recommendation System (AI-Based)
+# Smart Career Recommendation System
 
-## 📌 Overview
-The Smart Career Recommendation System is an AI-based application that uses **Data Science and Machine Learning techniques** to recommend relevant job roles based on a user’s skills.  
-The system ranks job roles using ML-based similarity, explains why a role fits the user, and identifies skill gaps to guide career improvement.
+An AI-based career recommendation web application that suggests suitable job roles from a user's skills. The system compares user-entered skills with job requirements, calculates skill overlap, and uses a Python ML matcher with TF-IDF and cosine similarity to rank the best career matches.
 
-This project demonstrates **applied Data Science**, **Machine Learning reasoning**, and **end-to-end system design**.
+## Features
 
----
+- Enter comma-separated skills and get ranked job recommendations.
+- Calculates exact matched skills and missing skills for each role.
+- Uses a hybrid ML score based on skill overlap and semantic similarity.
+- Displays confidence labels such as Strong Match, Moderate Match, and Low Match.
+- Highlights the top recommendation.
+- Provides short improvement suggestions for missing skills.
+- Includes APIs to fetch and add jobs.
 
-## 🧠 Data Science & Machine Learning Approach
-- User skills and job requirements are treated as **text-based features**
-- **TF-IDF vectorization** converts skills into numerical representations
-- **Cosine similarity** measures semantic similarity between user skills and job skills
-- A **hybrid scoring strategy** combines:
-  - Skill overlap
-  - Semantic similarity
-- Explainable AI logic is used to interpret and present model outputs clearly
+## Tech Stack
 
----
+**Frontend**
 
-## 🚀 Key Features
-- ML-based job recommendation using semantic similarity
-- Hybrid skill-matching and ranking logic
-- Top-ranked job role recommendations
-- Explainable AI insights (“Why this job fits you”)
-- Skill-gap identification for upskilling guidance
-- Clean and user-friendly React interface
-
----
-
-## 🔄 How the System Works
-1. User enters their skills
-2. Backend retrieves job skill data from the database
-3. Python-based ML logic computes similarity scores
-4. Job roles are ranked based on relevance
-5. Explainable insights and skill gaps are generated
-6. Results are displayed with confidence indicators
-
----
-
-## 🛠️ Tech Stack
-**Programming Language**
-- Python
-
-**Data Science & Machine Learning**
-- TF-IDF Vectorization
-- Cosine Similarity
-- Hybrid Scoring Logic
-- Explainable AI (XAI concepts)
+- React
+- Tailwind CSS
+- React Scripts
 
 **Backend**
+
 - Node.js
 - Express.js
 - MongoDB
+- Mongoose
 
-**Frontend**
-- React
-- Tailwind CSS
+**Machine Learning**
 
----
+- Python
+- scikit-learn
+- TF-IDF Vectorizer
+- Cosine Similarity
 
-## ▶️ How to Run the Project Locally
+## Project Structure
 
-### Prerequisites
-- Node.js (v16 or above)
-- Python (v3.8 or above)
-- MongoDB (local or MongoDB Atlas)
+```text
+smart-career-recommendation/
+|-- backend/
+|   |-- controllers/
+|   |   |-- jobController.js
+|   |   `-- recommendController.js
+|   |-- ml/
+|   |   `-- ml_matcher.py
+|   |-- models/
+|   |   |-- Job.js
+|   |   `-- UserProfile.js
+|   |-- routes/
+|   |   |-- jobRoutes.js
+|   |   |-- recommendRoutes.js
+|   |   `-- userRoutes.js
+|   |-- utils/
+|   |   `-- mlSimilarity.js
+|   |-- seed.js
+|   |-- server.js
+|   `-- package.json
+|-- frontend/
+|   |-- src/
+|   |   |-- components/
+|   |   |   |-- Jobs.js
+|   |   |   |-- Navbar.js
+|   |   |   `-- RecommendJobs.js
+|   |   |-- App.js
+|   |   `-- index.js
+|   `-- package.json
+`-- README.md
+```
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js
 - npm
+- Python
+- MongoDB
 
----
+Python packages required by the ML matcher:
 
-### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/madhura276/smart-career-recommendation-system.git
-cd smart-career-recommendation-system
+pip install scikit-learn
+```
 
-### 2️⃣ Backend Setup
+## Environment Variables
+
+Create a `.env` file inside the `backend` folder:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+MONGO_URL=your_mongodb_connection_string
+```
+
+`server.js` uses `MONGO_URI`, while `seed.js` uses `MONGO_URL`, so both are included for the current codebase.
+
+## Installation
+
+Clone the repository and install dependencies for both apps:
+
+```bash
+cd smart-career-recommendation
+
 cd backend
 npm install
 
-**Create a .env file inside the backend folder:**
-MONGO_URL=your_mongodb_connection_string
-PORT=5000
-
-**Install Python dependencies:**
-pip install scikit-learn
-
-**Start the backend server:**
-node server.js
-
-**Backend runs on:**
-http://localhost:5000
-
-### 3️⃣ Frontend Setup
-
-**Open a new terminal:**
-cd frontend
+cd ../frontend
 npm install
+```
+
+## Seed Sample Jobs
+
+The backend includes `seed.js` with sample career roles and skills.
+
+```bash
+cd backend
+node seed.js
+```
+
+## Run the Application
+
+Start the backend server:
+
+```bash
+cd backend
+node server.js
+```
+
+The backend runs on:
+
+```text
+http://localhost:5000
+```
+
+Start the frontend:
+
+```bash
+cd frontend
 npm start
+```
 
-**Frontend runs on:**
+The frontend runs on:
+
+```text
 http://localhost:3000
+```
 
-### 4️⃣ Using the Application
+## How It Works
 
-Enter your skills (e.g., python, sql, excel)
-Click Get Recommendations
-View ranked job roles with:
-ML match score
-Explainable AI insights
-Skill-gap suggestions
+1. The user enters skills in the frontend, for example:
 
-🔮 Future Improvements
+   ```text
+   python, sql, excel
+   ```
 
-Skill importance weighting for better accuracy
-Personalized learning path recommendations
-Integration with real-world job descriptions
-Enhanced data-driven insights and analytics
+2. The frontend sends the skills to:
 
-📌 Disclaimer
+   ```text
+   POST /api/recommend
+   ```
 
-Recommendations are generated using ML-based similarity techniques and are intended to provide guidance, not definitive career decisions.
+3. The backend loads jobs from MongoDB and compares each job's required skills with the user's skills.
+
+4. The backend calls the Python ML script through `child_process.execFile`.
+
+5. The Python script calculates a final score using:
+
+   ```text
+   final_score = 60% exact skill overlap + 40% TF-IDF cosine similarity
+   ```
+
+6. The API returns the top 5 recommended roles sorted by ML match score.
+
+## API Endpoints
+
+### Get All Jobs
+
+```http
+GET /api/jobs
+```
+
+Returns all jobs stored in MongoDB.
+
+### Add a Job
+
+```http
+POST /api/jobs
+```
+
+Example request body:
+
+```json
+{
+  "title": "Data Analyst",
+  "category": "Data",
+  "skills": ["Python", "SQL", "Power BI", "Excel"],
+  "salaryRange": "4 LPA - 8 LPA",
+  "description": "Analyze business data and create dashboards."
+}
+```
+
+### Get Career Recommendations
+
+```http
+POST /api/recommend
+```
+
+Example request body:
+
+```json
+{
+  "skills": ["python", "sql", "excel"]
+}
+```
+
+Example response:
+
+```json
+[
+  {
+    "title": "Data Analyst",
+    "matchedSkills": ["python", "sql", "excel"],
+    "missingSkills": ["power bi", "data cleaning"],
+    "matchPercentage": 60,
+    "mlMatchScore": 78.45,
+    "whyThisJob": "This role matches your skills in python, sql, excel. Learning power bi, data cleaning can further improve your fit."
+  }
+]
+```
+
+## Notes
+
+- The frontend currently renders the `RecommendJobs` component from `App.js`.
+- The frontend expects the backend API to run on `http://localhost:5000`.
+- The backend expects the Python command to be available as `python`.
+- Keep skill input comma-separated for best results.
+
+## Future Improvements
+
+- Add authentication and user profiles.
+- Save recommendation history.
+- Add admin screens to manage job roles.
+- Improve ML matching with embeddings or a trained recommendation model.
+- Add tests for backend routes and frontend components.
